@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Hotel</title>
+</head>
+<body>
+<h1>Welcome to the hotel</h1>
+
+<div sec:authorize="hasRole('ADMIN')">
+    /admin/**
+</div>
+<div sec:authorize="hasRole('GUEST')">
+    /hotel/rooms : provide parameter 'type' with one of the values: 'all', 'onebedroom', 'standard',
+    'penthouse' to show rooms of chosen type
+    <br>
+    hotel/available : no parameter needs to be provided to show rooms available for booking
+    <br>
+    hotel/properties : provide one or many parameters 'property' with values: balcony, tv,
+    refrigerator, minibar, jacuzzi to show rooms that have chosen properties
+    <br>
+    hotel/book : provide parameter 'number' with number of the room to be booked
+    <br>
+    hotel/booked : no parameter needs to be provided to show rooms booked by logged user
+</div>
+
+</body>
+</html>
