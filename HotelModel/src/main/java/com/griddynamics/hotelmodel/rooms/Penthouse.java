@@ -47,6 +47,7 @@ public class Penthouse extends Room {
   public Penthouse(Room room) {
     this.number = room.getNumber();
     this.floor = room.getFloor();
+    this.type = Type.PENTHOUSE;
     this.price = room.getPrice();
     this.totalSize = room.getTotalSize();
     this.isBooked = room.isBooked();

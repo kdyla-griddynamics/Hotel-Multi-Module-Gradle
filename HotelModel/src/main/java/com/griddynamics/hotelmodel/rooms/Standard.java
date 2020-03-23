@@ -43,6 +43,7 @@ public class Standard extends Room {
   public Standard(Room room) {
     this.number = room.getNumber();
     this.floor = room.getFloor();
+    this.type = Type.STANDARD;
     this.price = room.getPrice();
     this.totalSize = room.getTotalSize();
     this.isBooked = room.isBooked();

@@ -1,15 +1,17 @@
 package com.griddynamics.restapp.controllers;
 
-import com.griddynamics.hotelmodel.menu.IncorrectBookingDatesException;
+import com.griddynamics.hotelmodel.rooms.Properties;
 import com.griddynamics.hotelmodel.rooms.Room;
+import com.griddynamics.hotelmodel.rooms.Type;
 import com.griddynamics.hotelmodel.users.User;
 import com.griddynamics.hotelmodel.users.Users;
-import com.griddynamics.restapp.HotelProvider;
+import com.griddynamics.restapp.repositories.HotelRepository;
 import java.util.Collection;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,27 +26,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private static Logger logger = LogManager.getLogger(UserController.class);
-  private HotelProvider hotelProvider;
+  private HotelRepository hotelRepository;
 
   @Autowired
-  UserController(HotelProvider hotelProvider) {
-    this.hotelProvider = hotelProvider;
+  UserController(@Qualifier("hotelListImplRepo") HotelRepository hotelRepository) {
+    this.hotelRepository = hotelRepository;
   }
 
   @GetMapping("/rooms")
-  public Collection<? extends Room> showRoomsByType(@RequestParam(name = "type") String type) {
-    return hotelProvider.getUserFunctions().filterByType(type);
+  public Collection<? extends Room> showRoomsByType(@RequestParam(name = "type") Type type) {
+    return hotelRepository.findAllByType(type);
   }
 
   @GetMapping("/available")
   public Collection<Room> showAvailableRooms() {
-    return hotelProvider.getUserFunctions().checkIfAvailable();
+    return hotelRepository.findAllByBookedFalse();
   }
 
   @GetMapping("/properties")
   public Collection<? extends Room> showRoomsByProperties(@RequestParam(name = "property")
-                                                              List<String> property) {
-    return hotelProvider.getUserFunctions().filterByProperty(property);
+                                                              List<Properties> property) {
+    return hotelRepository.findAllByRoomPropertiesContaining(property);
   }
 
   @PostMapping("/book")
@@ -52,13 +54,7 @@ public class UserController {
                        @RequestParam(name = "from") String from,
                        @RequestParam(name = "until") String until) {
     User user = getUserFromAuthentication();
-    try {
-      return hotelProvider.getUserFunctions().book(number, user,
-          from, until).orElse(null);
-    } catch (IncorrectBookingDatesException e) {
-      logger.error(e.getMessage());
-    }
-    return null;
+    return hotelRepository.book(number, user, from, until);
   }
 
   @PutMapping("/update")
@@ -66,13 +62,7 @@ public class UserController {
                             @RequestParam(name = "from") String from,
                             @RequestParam(name = "until") String until) {
     User user = getUserFromAuthentication();
-    try {
-      return hotelProvider.getUserFunctions().updateBooking(number, user,
-          from, until).orElse(null);
-    } catch (IncorrectBookingDatesException e) {
-      logger.error(e.getMessage());
-    }
-    return null;
+    return hotelRepository.update(number, user, from, until);
   }
 
   @GetMapping("/booked")

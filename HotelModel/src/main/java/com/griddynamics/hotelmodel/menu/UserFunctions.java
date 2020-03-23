@@ -9,6 +9,7 @@ import static com.griddynamics.hotelmodel.rooms.Properties.TV;
 import com.griddynamics.hotelmodel.hotel.Hotel;
 import com.griddynamics.hotelmodel.rooms.Properties;
 import com.griddynamics.hotelmodel.rooms.Room;
+import com.griddynamics.hotelmodel.rooms.Type;
 import com.griddynamics.hotelmodel.users.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -48,14 +49,10 @@ public class UserFunctions {
     return allProperties;
   }
 
-  public List<Room> filterByProperty(List<String> properties) {
-    List<Properties> enumProps = properties.stream()
-        .map(s -> s = s.toUpperCase())
-        .map(s -> Enum.valueOf(Properties.class, s))
-        .collect(Collectors.toList());
+  public List<Room> filterByProperty(List<Properties> properties) {
 
     return hotel.getAllRooms().stream()
-        .filter(room1 -> room1.getRoomProperties().containsAll(enumProps))
+        .filter(room1 -> room1.getRoomProperties().containsAll(properties))
         .collect(Collectors.toList());
   }
 
@@ -110,15 +107,15 @@ public class UserFunctions {
         .collect(Collectors.toList());
   }
 
-  public Collection<? extends Room> filterByType(String type) {
+  public Collection<? extends Room> filterByType(Type type) {
     switch (type) {
-      case "all":
+      case ALL:
         return hotel.getAllRooms();
-      case "onebedroom":
+      case ONEBEDROOM:
         return hotel.getOneBedroomList();
-      case "standard":
+      case STANDARD:
         return hotel.getStandardList();
-      case "penthouse":
+      case PENTHOUSE:
         return hotel.getPenthouseList();
       default:
         logger.info("User chose incorrect type filter menu option");

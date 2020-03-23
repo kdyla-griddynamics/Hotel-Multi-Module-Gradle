@@ -41,6 +41,7 @@ public class OneBedroom extends Room {
   public OneBedroom(Room room) {
     this.number = room.getNumber();
     this.floor = room.getFloor();
+    this.type = Type.ONEBEDROOM;
     this.price = room.getPrice();
     this.totalSize = room.getTotalSize();
     this.isBooked = room.isBooked();

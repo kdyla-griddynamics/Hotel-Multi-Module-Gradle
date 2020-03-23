@@ -2,17 +2,16 @@ package com.griddynamics.hotelmodel.rooms;
 
 import static com.griddynamics.hotelmodel.rooms.Properties.BALCONY;
 
+import com.griddynamics.hotelmodel.ListConverter;
 import com.griddynamics.hotelmodel.menu.UserFunctions;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -43,6 +42,8 @@ public class Room {
   @Column
   int floor;
   @Column
+  Type type;
+  @Column
   int price;
   @Column
   double totalSize;
@@ -52,9 +53,7 @@ public class Room {
   LocalDate bookedFrom;
   @Column
   LocalDate bookedUntil;
-  @ElementCollection
-      @CollectionTable(name = "room_properties", joinColumns = @JoinColumn(name = "room_id"))
-      @Column(name = "property")
+  @Convert(converter = ListConverter.class)
   List<Properties> roomProperties = new ArrayList<>();
 
   /**

@@ -1,7 +1,7 @@
 package com.griddynamics.restapp.controllers;
 
 import com.griddynamics.hotelmodel.rooms.Room;
-import com.griddynamics.restapp.HotelProvider;
+import com.griddynamics.restapp.repositories.HotelListImplRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,25 +15,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin")
 public class AdminController {
 
-  private HotelProvider hotelProvider;
+  private HotelListImplRepo hotelListImplRepo;
 
   @Autowired
-  AdminController(HotelProvider hotelProvider) {
-    this.hotelProvider = hotelProvider;
+  AdminController(HotelListImplRepo hotelListImplRepo) {
+    this.hotelListImplRepo = hotelListImplRepo;
   }
 
   @PostMapping("/add")
-  public Room addOneBedroom(@RequestBody Room room) {
-    return hotelProvider.getAdminFunctions().addRoom(room).orElse(null);
+  public Room addRoom(@RequestBody Room room) {
+    return hotelListImplRepo.getAdminFunctions().addRoom(room).orElse(null);
   }
 
   @PutMapping("/update")
-  public Room updateOneBedroom(@RequestBody Room room) {
-    return hotelProvider.getAdminFunctions().updateRoom(room).orElse(null);
+  public Room updateRoom(@RequestBody Room room) {
+    return hotelListImplRepo.getAdminFunctions().updateRoom(room).orElse(null);
   }
 
   @DeleteMapping("/delete")
   public Room deleteRoom(@RequestParam(name = "number") int number) {
-    return hotelProvider.getAdminFunctions().deleteRoom(number).orElse(null);
+    return hotelListImplRepo.getAdminFunctions().deleteRoom(number).orElse(null);
   }
 }
