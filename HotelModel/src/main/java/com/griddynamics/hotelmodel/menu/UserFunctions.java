@@ -9,11 +9,9 @@ import static com.griddynamics.hotelmodel.rooms.Properties.TV;
 import com.griddynamics.hotelmodel.hotel.Hotel;
 import com.griddynamics.hotelmodel.rooms.Properties;
 import com.griddynamics.hotelmodel.rooms.Room;
-import com.griddynamics.hotelmodel.rooms.Type;
 import com.griddynamics.hotelmodel.users.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -101,22 +99,28 @@ public class UserFunctions {
     return bookingToUpdate;
   }
 
-  public Collection<Room> checkIfAvailable() {
+  public List<Room> checkIfAvailable() {
     return hotel.getAllRooms().stream()
         .filter(room -> !room.isBooked())
         .collect(Collectors.toList());
   }
 
-  public Collection<? extends Room> filterByType(Type type) {
+  public List<Room> filterByType(String type) {
     switch (type) {
-      case ALL:
-        return hotel.getAllRooms();
-      case ONEBEDROOM:
-        return hotel.getOneBedroomList();
-      case STANDARD:
-        return hotel.getStandardList();
-      case PENTHOUSE:
-        return hotel.getPenthouseList();
+      case "all":
+        return new ArrayList<>(hotel.getAllRooms());
+      case "onebedroom":
+        return hotel.getAllRooms().stream()
+            .filter(room -> room.getType().equals("onebedroom"))
+            .collect(Collectors.toList());
+      case "standard":
+        return hotel.getAllRooms().stream()
+            .filter(room -> room.getType().equals("standard"))
+            .collect(Collectors.toList());
+      case "penthouse":
+        return hotel.getAllRooms().stream()
+            .filter(room -> room.getType().equals("penthouse"))
+            .collect(Collectors.toList());
       default:
         logger.info("User chose incorrect type filter menu option");
         return null;

@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +30,6 @@ import org.apache.logging.log4j.Logger;
 @Setter
 @ToString
 @NoArgsConstructor
-@MappedSuperclass
 @Entity
 @Table
 public class Room {
@@ -42,13 +40,13 @@ public class Room {
   @Column
   int floor;
   @Column
-  Type type;
+  String type;
   @Column
   int price;
   @Column
   double totalSize;
   @Column
-  boolean isBooked;
+  boolean booked;
   @Column
   LocalDate bookedFrom;
   @Column
@@ -69,7 +67,7 @@ public class Room {
   public Room(int number, int floor) {
     this.number = number;
     this.floor = floor;
-    this.isBooked = false;
+    this.booked = false;
     this.bookedFrom = null;
     this.bookedUntil = null;
     roomProperties.add(BALCONY);

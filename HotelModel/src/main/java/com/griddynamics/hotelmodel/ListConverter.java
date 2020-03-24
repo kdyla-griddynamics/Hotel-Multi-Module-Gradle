@@ -17,8 +17,11 @@ public class ListConverter implements AttributeConverter<List<Properties>, Strin
 
   @Override
   public List<Properties> convertToEntityAttribute(String string) {
+    String subString = string.replaceAll("\\[", "");
+    String subString2 = subString.replaceAll("]", "");
+    String subString3 = subString2.replaceAll(" ", "");
     List<Properties> propertiesList = new ArrayList<>();
-    String[] split = string.split(SPLIT_CHAR);
+    String[] split = subString3.split(SPLIT_CHAR);
     for (int i = 0; i < split.length; i++) {
       propertiesList.add(Enum.valueOf(Properties.class, split[i]));
 

@@ -30,7 +30,7 @@ public class AdminFunctions {
     this.hotel = hotel;
   }
 
-  public Optional<Room> addRoom(Room room) {
+  public Optional<Room> save(Room room) {
     Optional<Room> roomToAdd = hotel.getAllRooms().stream()
         .filter(r -> r.getNumber() == room.getNumber())
         .findFirst();
@@ -48,40 +48,7 @@ public class AdminFunctions {
       hotel.getAllRooms().add(room);
       return Optional.of(room);
     } else {
-      return Optional.empty();
-    }
-  }
-
-  public Optional<Room> deleteRoom(int number) {
-    Optional<Room> roomToDelete = hotel.getAllRooms().stream()
-        .filter(room -> room.getNumber() == number)
-        .findFirst();
-
-    if (roomToDelete.isPresent()) {
-      hotel.getOneBedroomList().stream()
-          .filter(oneBedroom -> oneBedroom.getNumber() == number)
-          .findAny()
-          .ifPresent(oneBedroom -> hotel.getOneBedroomList().remove(oneBedroom));
-      hotel.getStandardList().stream()
-          .filter(standard -> standard.getNumber() == number)
-          .findAny()
-          .ifPresent(standard -> hotel.getStandardList().remove(standard));
-      hotel.getPenthouseList().stream()
-          .filter(penthouse -> penthouse.getNumber() == number)
-          .findAny()
-          .ifPresent(penthouse -> hotel.getPenthouseList().remove(penthouse));
-      hotel.getAllRooms().remove(roomToDelete.get());
-    }
-    return roomToDelete;
-  }
-
-  public Optional<Room> updateRoom(Room room) {
-    Optional<Room> roomToUpdate = hotel.getAllRooms().stream()
-        .filter(r -> r.getNumber() == room.getNumber())
-        .findAny();
-
-    if (roomToUpdate.isPresent()) {
-      int roomNumber = roomToUpdate.get().getNumber();
+      int roomNumber = roomToAdd.get().getNumber();
       hotel.getOneBedroomList().stream()
           .filter(oneBedroom -> oneBedroom.getNumber() == roomNumber)
           .findAny()
@@ -103,9 +70,31 @@ public class AdminFunctions {
             hotel.getPenthouseList().remove(penthouse);
             hotel.getPenthouseList().add(new Penthouse(room));
           });
-      hotel.getAllRooms().remove(roomToUpdate.get());
+      hotel.getAllRooms().remove(roomToAdd.get());
       hotel.getAllRooms().add(room);
+      return Optional.of(room);
     }
-    return Optional.ofNullable(room);
+  }
+
+  public void deleteRoom(int number) {
+    Optional<Room> roomToDelete = hotel.getAllRooms().stream()
+        .filter(room -> room.getNumber() == number)
+        .findFirst();
+
+    if (roomToDelete.isPresent()) {
+      hotel.getOneBedroomList().stream()
+          .filter(oneBedroom -> oneBedroom.getNumber() == number)
+          .findAny()
+          .ifPresent(oneBedroom -> hotel.getOneBedroomList().remove(oneBedroom));
+      hotel.getStandardList().stream()
+          .filter(standard -> standard.getNumber() == number)
+          .findAny()
+          .ifPresent(standard -> hotel.getStandardList().remove(standard));
+      hotel.getPenthouseList().stream()
+          .filter(penthouse -> penthouse.getNumber() == number)
+          .findAny()
+          .ifPresent(penthouse -> hotel.getPenthouseList().remove(penthouse));
+      hotel.getAllRooms().remove(roomToDelete.get());
+    }
   }
 }
