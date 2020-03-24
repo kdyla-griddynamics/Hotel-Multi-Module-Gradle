@@ -7,23 +7,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface HotelDatabaseImplRepo extends JpaRepository<Room, Integer>, HotelRepository {
+
   @Override
   List<Room> findAllByType(String type);
 
   @Override
   List<Room> getAllByBookedFalse();
 
-  //  @Override
-//  List<Room> findAllByBookedFalse();
+  @Override
+  List<Room> findAll();
 
-//  @Override
-//  List<Room> findAllByRoomProperties(List<Properties> properties);
-
-//  @Override
-//  Room book(int number, User user, String dateFrom, String dateUntil);
-//
-//  @Override
-//  Room updateBook(int number, User user, String dateFrom, String dateUntil);
+  @Override
+  Room findByNumber(int number);
 
   @Override
   Room save(Room room);

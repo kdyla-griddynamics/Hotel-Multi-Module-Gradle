@@ -6,6 +6,7 @@ import com.griddynamics.hotelmodel.hotel.InvalidBuilderInputException;
 import com.griddynamics.hotelmodel.menu.AdminFunctions;
 import com.griddynamics.hotelmodel.menu.UserFunctions;
 import com.griddynamics.hotelmodel.rooms.Room;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-@Component(value = "list")
+@Component
 @Getter
 @Setter
 public class HotelListImplRepo implements HotelRepository {
@@ -24,12 +25,25 @@ public class HotelListImplRepo implements HotelRepository {
   private AdminFunctions adminFunctions;
 
   HotelListImplRepo() throws InvalidBuilderInputException {
-    this.hotel = new HotelBuilder().withOneBedrooms(5,1)
-        .withStandardRooms(5,2)
-        .withPenthouses(5,3)
+    this.hotel = new HotelBuilder().withOneBedrooms(5, 1)
+        .withStandardRooms(5, 2)
+        .withPenthouses(5, 3)
         .build();
     this.userFunctions = new UserFunctions(this.hotel);
     this.adminFunctions = new AdminFunctions(this.hotel);
+  }
+
+  @Override
+  public List<Room> findAll() {
+    return new ArrayList<>(hotel.getAllRooms());
+  }
+
+  @Override
+  public Room findByNumber(int number) {
+    return hotel.getAllRooms().stream()
+        .filter(room -> room.getNumber() == number)
+        .findFirst()
+        .orElse(null);
   }
 
   @Override
@@ -41,38 +55,6 @@ public class HotelListImplRepo implements HotelRepository {
   public List<Room> getAllByBookedFalse() {
     return getUserFunctions().checkIfAvailable();
   }
-
-//  @Override
-//  public List<Room> findAllByBookedFalse() {
-//    return getUserFunctions().checkIfAvailable();
-//  }
-
-//  @Override
-//  public List<Room> findAllByRoomProperties(List<Properties> properties) {
-//    return getUserFunctions().filterByProperty(properties);
-//  }
-
-//  @Override
-//  public Room book(int number, User user, String from, String until) {
-//    try {
-//      return getUserFunctions().book(number, user,
-//          from, until).orElse(null);
-//    } catch (IncorrectBookingDatesException e) {
-//      logger.error(e.getMessage());
-//    }
-//    return null;
-//  }
-//
-//  @Override
-//  public Room updateBook(int number, User user, String from, String until) {
-//    try {
-//      return getUserFunctions().updateBooking(number, user,
-//          from, until).orElse(null);
-//    } catch (IncorrectBookingDatesException e) {
-//      logger.error(e.getMessage());
-//    }
-//    return null;
-//  }
 
   @Override
   public Room save(Room room) {

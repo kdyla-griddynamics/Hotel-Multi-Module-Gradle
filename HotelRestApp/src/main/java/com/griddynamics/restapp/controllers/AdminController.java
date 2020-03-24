@@ -1,9 +1,8 @@
 package com.griddynamics.restapp.controllers;
 
 import com.griddynamics.hotelmodel.rooms.Room;
-import com.griddynamics.restapp.repositories.HotelDatabaseImplRepo;
-import com.griddynamics.restapp.repositories.HotelListImplRepo;
 import com.griddynamics.restapp.repositories.HotelRepository;
+import javax.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +37,7 @@ public class AdminController {
     return hotelRepository.save(room);
   }
 
+  @Transactional
   @DeleteMapping("/delete")
   public void deleteRoom(@RequestParam(name = "number") int number) {
     hotelRepository.deleteByNumber(number);
