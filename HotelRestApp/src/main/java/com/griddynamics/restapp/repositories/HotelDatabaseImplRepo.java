@@ -25,4 +25,5 @@ public interface HotelDatabaseImplRepo extends JpaRepository<Room, Integer>, Hot
 
   @Override
   void deleteByNumber(int number);
+
 }

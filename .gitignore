@@ -56,9 +56,5 @@ gradle-app.setting
 HotelModel/src/test/resources/
 HotelRestApp/src/test/resources/
 /HotelRestApp/.idea/
-/HotelRestApp/build/
-/HotelModel/build/
-/HotelModel/build/
-/HotelRestApp/build/
 .idea/.name
 .idea/inspectionProfiles/

@@ -5,9 +5,9 @@ import com.griddynamics.hotelmodel.rooms.Room;
 import com.griddynamics.hotelmodel.users.User;
 import com.griddynamics.hotelmodel.users.Users;
 import com.griddynamics.restapp.repositories.HotelRepository;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,47 +63,17 @@ public class UserController {
                        @RequestParam(name = "until") String until) {
     User user = getUserFromAuthentication();
     Room roomToBook = hotelRepository.findByNumber(number);
-    LocalDate dateFrom = LocalDate.parse(from);
-    LocalDate dateUntil = LocalDate.parse(until);
-    if (roomToBook.isBooked()) {
-      logger.error("User tried to book already booked room");
-      return null;
-    } else {
-      if (dateUntil.isAfter(dateFrom) && user.getBookedRooms().size() < 2) {
-        roomToBook.setBooked(true);
-        user.getBookedRooms().add(roomToBook);
-        roomToBook.setBookedFrom(dateFrom);
-        roomToBook.setBookedUntil(dateUntil);
-        return hotelRepository.save(roomToBook);
-      } else {
-        logger.error("Room has not been booked: " +
-            "either the dates were incorrect or user already booked more than two rooms");
-        return null;
-      }
-    }
+    Optional<Room> bookedRoom = hotelRepository.book(roomToBook, user, from, until);
+    return bookedRoom.map(room -> hotelRepository.save(room)).orElse(null);
   }
 
   @PutMapping("/update")
   public Room updateBooking(@RequestParam(name = "number") int number,
                             @RequestParam(name = "from") String from,
                             @RequestParam(name = "until") String until) {
-    Room roomToBook = hotelRepository.findByNumber(number);
-    System.out.println(roomToBook);
-    LocalDate dateFrom = LocalDate.parse(from);
-    LocalDate dateUntil = LocalDate.parse(until);
-    if (roomToBook.isBooked()) {
-      if (dateUntil.isAfter(dateFrom)) {
-        roomToBook.setBookedFrom(dateFrom);
-        roomToBook.setBookedUntil(dateUntil);
-        return hotelRepository.save(roomToBook);
-      } else {
-        logger.error("Booking was not updated, because dates were incorrect");
-        return null;
-      }
-    } else {
-      logger.error("Booking was not updated, because the room was not booked");
-      return null;
-    }
+    Room bookToUpdate = hotelRepository.findByNumber(number);
+    Optional<Room> updatedBook = hotelRepository.updateBook(bookToUpdate, from, until);
+    return updatedBook.map(room -> hotelRepository.save(room)).orElse(null);
   }
 
   @GetMapping("/booked")
