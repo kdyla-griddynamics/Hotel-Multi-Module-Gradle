@@ -1,8 +1,12 @@
 package com.griddynamics.restapp.controllers;
 
 import com.griddynamics.hotelmodel.rooms.Room;
-import com.griddynamics.restapp.HotelProvider;
+import com.griddynamics.restapp.repositories.HotelRepository;
+import javax.transaction.Transactional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,25 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin")
 public class AdminController {
 
-  private HotelProvider hotelProvider;
+  private static Logger logger = LogManager.getLogger(AdminController.class);
+  private HotelRepository hotelRepository;
 
   @Autowired
-  AdminController(HotelProvider hotelProvider) {
-    this.hotelProvider = hotelProvider;
+  AdminController(@Qualifier(value = "hotelDatabaseImplRepo") HotelRepository hotelRepository) {
+    this.hotelRepository = hotelRepository;
   }
 
   @PostMapping("/add")
-  public Room addOneBedroom(@RequestBody Room room) {
-    return hotelProvider.getAdminFunctions().addRoom(room).orElse(null);
+  public Room addRoom(@RequestBody Room room) {
+    return hotelRepository.save(room);
   }
 
   @PutMapping("/update")
-  public Room updateOneBedroom(@RequestBody Room room) {
-    return hotelProvider.getAdminFunctions().updateRoom(room).orElse(null);
+  public Room updateRoom(@RequestBody Room room) {
+    return hotelRepository.save(room);
   }
 
+  @Transactional
   @DeleteMapping("/delete")
-  public Room deleteRoom(@RequestParam(name = "number") int number) {
-    return hotelProvider.getAdminFunctions().deleteRoom(number).orElse(null);
+  public void deleteRoom(@RequestParam(name = "number") int number) {
+    hotelRepository.deleteByNumber(number);
   }
 }

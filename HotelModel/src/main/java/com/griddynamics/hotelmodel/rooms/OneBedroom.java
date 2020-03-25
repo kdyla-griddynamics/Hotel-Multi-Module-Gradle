@@ -33,6 +33,7 @@ public class OneBedroom extends Room {
    */
   public OneBedroom(int number, int floor) {
     super(number, floor);
+    this.type = "onebedroom";
     this.price = 180;
     this.totalSize = 12;
     roomProperties.add(TV);
@@ -41,9 +42,10 @@ public class OneBedroom extends Room {
   public OneBedroom(Room room) {
     this.number = room.getNumber();
     this.floor = room.getFloor();
+    this.type = "onebedroom";
     this.price = room.getPrice();
     this.totalSize = room.getTotalSize();
-    this.isBooked = room.isBooked();
+    this.booked = room.isBooked();
     this.bookedFrom = room.getBookedFrom();
     this.bookedUntil = room.getBookedUntil();
     this.roomProperties = room.getRoomProperties();

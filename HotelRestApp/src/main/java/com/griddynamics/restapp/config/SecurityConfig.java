@@ -27,6 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .invalidateHttpSession(true)
         .clearAuthentication(true)
         .logoutSuccessUrl("/");
+
+    http.headers().frameOptions().disable();
   }
 
   @Autowired

@@ -2,11 +2,17 @@ package com.griddynamics.hotelmodel.rooms;
 
 import static com.griddynamics.hotelmodel.rooms.Properties.BALCONY;
 
+import com.griddynamics.hotelmodel.ListConverter;
 import com.griddynamics.hotelmodel.menu.UserFunctions;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,16 +30,28 @@ import org.apache.logging.log4j.Logger;
 @Setter
 @ToString
 @NoArgsConstructor
+@Entity
+@Table
 public class Room {
 
   private static Logger logger = LogManager.getLogger(Room.class);
+  @Id
   int number;
+  @Column
   int floor;
+  @Column
+  String type;
+  @Column
   int price;
+  @Column
   double totalSize;
-  boolean isBooked;
+  @Column
+  boolean booked;
+  @Column
   LocalDate bookedFrom;
+  @Column
   LocalDate bookedUntil;
+  @Convert(converter = ListConverter.class)
   List<Properties> roomProperties = new ArrayList<>();
 
   /**
@@ -49,7 +67,7 @@ public class Room {
   public Room(int number, int floor) {
     this.number = number;
     this.floor = floor;
-    this.isBooked = false;
+    this.booked = false;
     this.bookedFrom = null;
     this.bookedUntil = null;
     roomProperties.add(BALCONY);

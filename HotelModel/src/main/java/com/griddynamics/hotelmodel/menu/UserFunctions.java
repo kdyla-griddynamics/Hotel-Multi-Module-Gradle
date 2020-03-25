@@ -12,7 +12,6 @@ import com.griddynamics.hotelmodel.rooms.Room;
 import com.griddynamics.hotelmodel.users.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -48,14 +47,10 @@ public class UserFunctions {
     return allProperties;
   }
 
-  public List<Room> filterByProperty(List<String> properties) {
-    List<Properties> enumProps = properties.stream()
-        .map(s -> s = s.toUpperCase())
-        .map(s -> Enum.valueOf(Properties.class, s))
-        .collect(Collectors.toList());
+  public List<Room> filterByProperty(List<Properties> properties) {
 
     return hotel.getAllRooms().stream()
-        .filter(room1 -> room1.getRoomProperties().containsAll(enumProps))
+        .filter(room1 -> room1.getRoomProperties().containsAll(properties))
         .collect(Collectors.toList());
   }
 
@@ -104,22 +99,28 @@ public class UserFunctions {
     return bookingToUpdate;
   }
 
-  public Collection<Room> checkIfAvailable() {
+  public List<Room> checkIfAvailable() {
     return hotel.getAllRooms().stream()
         .filter(room -> !room.isBooked())
         .collect(Collectors.toList());
   }
 
-  public Collection<? extends Room> filterByType(String type) {
+  public List<Room> filterByType(String type) {
     switch (type) {
       case "all":
-        return hotel.getAllRooms();
+        return new ArrayList<>(hotel.getAllRooms());
       case "onebedroom":
-        return hotel.getOneBedroomList();
+        return hotel.getAllRooms().stream()
+            .filter(room -> room.getType().equals("onebedroom"))
+            .collect(Collectors.toList());
       case "standard":
-        return hotel.getStandardList();
+        return hotel.getAllRooms().stream()
+            .filter(room -> room.getType().equals("standard"))
+            .collect(Collectors.toList());
       case "penthouse":
-        return hotel.getPenthouseList();
+        return hotel.getAllRooms().stream()
+            .filter(room -> room.getType().equals("penthouse"))
+            .collect(Collectors.toList());
       default:
         logger.info("User chose incorrect type filter menu option");
         return null;

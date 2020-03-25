@@ -34,6 +34,7 @@ public class Standard extends Room {
    */
   public Standard(int number, int floor) {
     super(number, floor);
+    this.type = "standard";
     this.price = 280;
     this.totalSize = 20;
     roomProperties.add(TV);
@@ -43,9 +44,10 @@ public class Standard extends Room {
   public Standard(Room room) {
     this.number = room.getNumber();
     this.floor = room.getFloor();
+    this.type = "standard";
     this.price = room.getPrice();
     this.totalSize = room.getTotalSize();
-    this.isBooked = room.isBooked();
+    this.booked = room.isBooked();
     this.bookedFrom = room.getBookedFrom();
     this.bookedUntil = room.getBookedUntil();
     this.roomProperties = room.getRoomProperties();
